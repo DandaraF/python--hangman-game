@@ -9,18 +9,31 @@ def game():
     correct_letters = camouflage_word(secret_word)
     print(correct_letters)
 
-    hanged = False  # enforcou
-    hit = False  # acertou
+    hanged = False
+    hit = False
     error = 0
 
+    letters = []
+
     while (not hanged and not hit):
+
         kick = next_kick()
 
         if (kick in secret_word):
-            score_kick(kick, correct_letters, secret_word)
+            if (kick in letters):
+                message_letters(letters, error)
+            else:
+                letters.append(kick)
+                message_letters(letters, error)
+                score_kick(kick, correct_letters, secret_word)
+
+        elif (kick in letters):
+            message_letters(letters, error)
+
         else:
+            letters.append(kick)
             error += 1
-            gallows(error)
+            message_letters(letters, error)
 
         hanged = error == 7
         hit = '_' not in correct_letters
@@ -32,52 +45,59 @@ def game():
         defeat_message(secret_word)
 
 
+def message_letters(letters, error):
+    print('___________________________________')
+    print()
+    print('Letras chutadas: {}'.format(letters))
+    gallows(error)
+
+
 def gallows(error):
     print("  _______     ")
     print(" |/      |    ")
 
     if(error == 1):
 
-        print(" |      (_)   ")
+        print(" |   \033[0;31m   (_)  \033[m  ")
         print(" |            ")
         print(" |            ")
         print(" |            ")
 
     if(error == 2):
-        print(" |      (_)   ")
-        print(" |      \     ")
+        print(" |  \033[0;31m    (_) \033[m  ")
+        print(" |    \033[0;31m  \   \033[m   ")
         print(" |            ")
         print(" |            ")
 
     if(error == 3):
-        print(" |      (_)   ")
-        print(" |      \|    ")
+        print(" |  \033[0;31m    (_) \033[m   ")
+        print(" |  \033[0;31m    \|  \033[m   ")
         print(" |            ")
         print(" |            ")
 
     if(error == 4):
-        print(" |      (_)   ")
-        print(" |      \|/   ")
+        print(" |  \033[0;31m    (_) \033[m   ")
+        print(" |  \033[0;31m    \|/ \033[m   ")
         print(" |            ")
         print(" |            ")
 
     if(error == 5):
-        print(" |      (_)   ")
-        print(" |      \|/   ")
-        print(" |       |    ")
+        print(" |  \033[0;31m    (_) \033[m   ")
+        print(" |   \033[0;31m   \|/ \033[m   ")
+        print(" |   \033[0;31m    |  \033[m   ")
         print(" |            ")
 
     if(error == 6):
-        print(" |      (_)   ")
-        print(" |      \|/   ")
-        print(" |       |    ")
-        print(" |      /     ")
+        print(" | \033[0;31m     (_) \033[m   ")
+        print(" |  \033[0;31m    \|/ \033[m   ")
+        print(" |   \033[0;31m    |  \033[m   ")
+        print(" |   \033[0;31m   /   \033[m   ")
 
     if (error == 7):
-        print(" |      (_)   ")
-        print(" |      \|/   ")
-        print(" |       |    ")
-        print(" |      / \   ")
+        print(" |  \033[0;31m    (_)  \033[m  ")
+        print(" |  \033[0;31m    \|/  \033[m  ")
+        print(" |  \033[0;31m     |   \033[m  ")
+        print(" |  \033[0;31m    / \  \033[m  ")
 
     print(" |            ")
     print("_|___         ")
@@ -86,28 +106,17 @@ def gallows(error):
 
 def defeat_message(secret_word):
     print()
-    print("Você perdeu!")
-    print("A palavra era {}".format(secret_word))
-    print("    _______________         ")
-    print("   /               \       ")
-    print("  /                 \      ")
-    print("//                   \/\  ")
-    print("\|   XXXX     XXXX   | /   ")
-    print(" |   XXXX     XXXX   |/     ")
-    print(" |   XXX       XXX   |      ")
-    print(" |                   |      ")
-    print(" \__      XXX      __/     ")
-    print("   |\     XXX     /|       ")
-    print("   | |           | |        ")
-    print("   | I I I I I I I |        ")
-    print("   |  I I I I I I  |        ")
-    print("   \_             _/       ")
-    print("     \_         _/         ")
-    print("       \_______/           ")
+    print('\033[0;31m    Você perdeu! \033[m        ')
+    print('A palavra era \033[0;31m{}'.format(secret_word))
+    print(' \033[0;31m__________________________ ')
+    print('|                          |')
+    print('|      * GAMER OVER *      |')
+    print('|__________________________|\033[m')
 
 
 def victory_message():
-    print("Parabéns, você ganhou!")
+    print()
+    print(" \033[32mParabéns, você ganhou! ")
     print("       ___________      ")
     print("      '._==_==_=_.'     ")
     print("      .-\\:      /-.    ")
@@ -117,7 +126,7 @@ def victory_message():
     print("         '::. .'        ")
     print("           ) (          ")
     print("         _.' '._        ")
-    print("        '-------'       ")
+    print("        '-------'       \033[m")
 
 
 def score_kick(kick, correct_letters, secret_word):
@@ -129,11 +138,24 @@ def score_kick(kick, correct_letters, secret_word):
 
 
 def next_kick():
-    print()
+    characteres = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
+                   'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
 
-    kick = input('Digite uma letra: ')
-    kick = kick.strip().upper()
-    return kick
+    valid_kick = ''
+
+    while (not valid_kick):
+        print()
+        kick = input('\033[32mDigite uma letra: \033[m')
+        print()
+        kick = kick.strip().upper()
+        if (kick in characteres):
+            valid_kick = kick
+        else:
+            print(
+                '\033[0;31mValor inválido. Digite uma letra do alfabeto.\033[m')
+            print()
+            print('Alfabeto: {}'.format(characteres))
+        return valid_kick
 
 
 def camouflage_word(secret_word):
@@ -160,8 +182,9 @@ def opening_message():
     print('**********************************************')
     print('**********Bem vindo ao jogo da Forca!*********')
     print('**********************************************')
+    print()
     print('           Você pode errar 7 vezes.           ')
-    print('                 Boa sorte!                   ')
+    print('                 Bom jogo!                    ')
     print()
 
 
