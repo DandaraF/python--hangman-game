@@ -48,7 +48,7 @@ def game():
 
 
 def message_letters(letters, error):
-    print('___________________________________')
+    print('_________________________________________________________________')
     print()
     print('Letras chutadas: {}'.format(letters))
     gallows(error)
@@ -184,7 +184,7 @@ def load_word():
 
 def opening_message():
     print('**********************************************')
-    print('**********Bem vindo ao jogo da Forca!*********')
+    print('*         Bem vindo ao jogo da Forca!        *')
     print('**********************************************')
     print()
     print('           Você pode errar 7 vezes.           ')
