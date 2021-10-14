@@ -3,29 +3,31 @@ import random
 
 def game():
 
+    error = 0
+
     opening_message()
     secret_word = load_word()
+    gallows(error)
 
     correct_letters = camouflage_word(secret_word)
     print(correct_letters)
 
     hanged = False
     hit = False
-    error = 0
 
     letters = []
 
     while (not hanged and not hit):
 
-        kick = next_kick()
-
+        kick = next_kick(error)
         if (kick in secret_word):
             if (kick in letters):
                 message_letters(letters, error)
             else:
-                letters.append(kick)
-                message_letters(letters, error)
-                score_kick(kick, correct_letters, secret_word)
+                if (kick != ''):
+                    letters.append(kick)
+                    message_letters(letters, error)
+                    score_kick(kick, correct_letters, secret_word)
 
         elif (kick in letters):
             message_letters(letters, error)
@@ -137,7 +139,7 @@ def score_kick(kick, correct_letters, secret_word):
         index += 1
 
 
-def next_kick():
+def next_kick(error):
     characteres = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
                    'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
 
@@ -155,6 +157,8 @@ def next_kick():
                 '\033[0;31mValor inválido. Digite uma letra do alfabeto.\033[m')
             print()
             print('Alfabeto: {}'.format(characteres))
+            print()
+            gallows(error)
         return valid_kick
 
 
